@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,6 +8,15 @@
 
     <%--静态包含base标签、css样式、jQuery文件--%>
     <%@include file="/pages/common/head.jsp"%>
+    <script type="text/javascript">
+        $(function () {
+            //给删除的a标签绑定单击事件，用于删除的确认提示操作
+            $("a.deleteClass").click(function () {
+                //confirm是确认框函数，参数是其提示内容，两个按钮，一个确认，一个取消
+                return confirm("您确认要删除【"+ $(this).parent().parent().find("td:first").text() +"】吗？");
+            })
+        })
+    </script>
 
 </head>
 <body>
@@ -29,27 +39,26 @@
 				<td>销量</td>
 				<td>库存</td>
 				<td colspan="2">操作</td>
-			</tr>		
+			</tr>
+            <c:forEach items="${requestScope.books}" var="item">
+            <tr>
+                <td>${item.name}</td>
+                <td>${item.price}</td>
+                <td>${item.author}</td>
+                <td>${item.sales}</td>
+                <td>${item.stock}</td>
+                <td><a href="manager/bookServlet?action=getBook&id=${item.id}">修改</a></td>
+                <td><a class="deleteClass" href="manager/bookServlet?action=delete&id=${item.id}">删除</a></td>
+            </tr>
+            </c:forEach>
 			<tr>
-				<td>时间简史</td>
-				<td>20.00</td>
-				<td>霍金</td>
-				<td>200</td>
-				<td>400</td>
-				<td><a href="book_edit.jsp">修改</a></td>
-				<td><a href="#">删除</a></td>
-			</tr>	
-			
-
-			
-			<tr>
 				<td></td>
 				<td></td>
 				<td></td>
 				<td></td>
 				<td></td>
 				<td></td>
-				<td><a href="book_edit.jsp">添加图书</a></td>
+				<td><a href="pages/manager/book_edit.jsp">添加图书</a></td>
 			</tr>	
 		</table>
 	</div>
