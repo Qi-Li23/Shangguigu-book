@@ -25,7 +25,7 @@
 </head>
 <body>
 		<div id="header">
-			<img class="logo_img" alt="" src="../../static/img/logo.gif" >
+			<img class="logo_img" alt="" src="/static/img/logo.gif" >
 			<span class="wel_word">编辑图书</span>
 
             <%-- 静态包含后台管理菜单页面 --%>
@@ -35,6 +35,7 @@
 		
 		<div id="main">
 			<form action="manager/bookServlet" method="post">
+				<input type="hidden" name="pageNo" value="${param.pageNo}"/>
 				<input type="hidden" name="action" value="${empty requestScope.book ? "add" : "update"}"/>
                 <input type="hidden" name="id" value="${requestScope.book.id}"/>
 				<table>

@@ -7,6 +7,7 @@ import java.util.List;
  * @create 2021-12-08-22:59
  */
 public class Page<T> {
+    //默认大小
     public static final Integer PAGE_SIZE = 4;
     //当前页码
     private Integer pageNo;
@@ -18,12 +19,29 @@ public class Page<T> {
     private Integer pageTotalCount;
     //当前页数据
     private List<T> items;
+    //分页条的地址
+    private String url;
 
     public Integer getPageNo() {
         return pageNo;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     public void setPageNo(Integer pageNo) {
+        //数据边界的有效检查
+        if(pageNo < 1) {
+            pageNo = 1;
+        }
+        if (pageNo > pageTotal) {
+            pageNo = pageTotal;
+        }
         this.pageNo = pageNo;
     }
 
@@ -67,6 +85,7 @@ public class Page<T> {
                 ", pageSize=" + pageSize +
                 ", pageTotalCount=" + pageTotalCount +
                 ", items=" + items +
+                ", url='" + url + '\'' +
                 '}';
     }
 }

@@ -59,4 +59,37 @@ public class BookDAOTest {
         System.out.println(books);
         JdbcUtils.close(conn);
     }
+
+    @Test
+    public void testQueryForPageTotalCount() {
+        Connection conn = JdbcUtils.getConnection();
+        int totalCount = bookDAO.queryForPageTotalCount(conn);
+        System.out.println(totalCount);
+        JdbcUtils.close(conn);
+    }
+
+    @Test
+    public void testQueryForItems() {
+        Connection conn = JdbcUtils.getConnection();
+        List<Book> books = bookDAO.queryForItems(conn, 0, 4);
+        books.forEach(System.out :: println);
+        JdbcUtils.close(conn);
+    }
+
+    @Test
+    public void testQueryForPageTotalCountByPrice() {
+        Connection conn = JdbcUtils.getConnection();
+        int totalCount = bookDAO.queryForPageTotalCountByPrice(conn, 10, 50);
+        System.out.println(totalCount);
+        JdbcUtils.close(conn);
+    }
+
+    @Test
+    public void testQueryForItemsByPrice() {
+        Connection conn = JdbcUtils.getConnection();
+        List<Book> books = bookDAO.queryForItemsByPrice(conn, 0, 4, 10, 50);
+        books.forEach(System.out :: println);
+        JdbcUtils.close(conn);
+    }
+
 }

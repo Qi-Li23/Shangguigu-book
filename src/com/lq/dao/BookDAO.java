@@ -48,4 +48,38 @@ public interface BookDAO {
      * @return
      */
     List<Book> queryBooks(Connection conn);
+
+    /**
+     * 查询表中书的总记录数
+     * @return
+     */
+    int queryForPageTotalCount(Connection conn);
+
+    /**
+     * 查询指定页面、指定页面大小的所有图书
+     * @param begin
+     * @param pageSize
+     * @return
+     */
+    List<Book> queryForItems(Connection conn, int begin, int pageSize);
+
+    /**
+     * 根据价格区间，查询记录数
+     * @param conn
+     * @param min
+     * @param max
+     * @return
+     */
+    int queryForPageTotalCountByPrice(Connection conn, int min, int max);
+
+    /**
+     *根据价格区间，查询指定页面、指定页面大小的所有图书
+     * @param conn
+     * @param begin
+     * @param pageSize
+     * @param min
+     * @param max
+     * @return
+     */
+    List<Book> queryForItemsByPrice(Connection conn, int begin, int pageSize, int min, int max);
 }
