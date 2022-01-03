@@ -10,6 +10,13 @@
 
     <script type="text/javascript">
         $(function() {
+            //给验证码图片绑定单击事件
+            $("#code_jpg").click(function () {
+                // 在事件响应的function 函数中有一个this 对象。这个this 对象，是当前正在响应事件的dom 对象
+                // src 属性表示验证码img 标签的图片路径。它可读，可写
+                this.src = "${basePath}kaptcha.jpg?d=" + new Date();
+            })
+
             //给注册按钮绑定单击事件
             $("#sub_btn").click(function () {
                 //对表单进行验证
@@ -122,8 +129,8 @@
 									<br />
 									<br />
 									<label>验证码：</label>
-									<input class="itxt" type="text" style="width: 150px;" name="code" id="code"/>
-									<img alt="" src="static/img/code.bmp" style="float: right; margin-right: 40px">
+									<input class="itxt" type="text" style="width: 100px;" name="code" id="code"/>
+									<img id="code_jpg" alt="" src="kaptcha.jpg" style="float: right; margin-right: 40px; width: 100px; height: 28px;">
 									<br />
 									<br />
 									<input type="submit" value="注册" id="sub_btn" />

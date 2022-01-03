@@ -1,6 +1,7 @@
 package com.lq.service;
 
 import com.lq.pojo.Book;
+import com.lq.pojo.Page;
 
 import java.util.List;
 
@@ -40,4 +41,21 @@ public interface BookService {
      */
     List<Book> queryBooks();
 
+    /**
+     * 处理分页
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
+    Page<Book> page(int pageNo, int pageSize);
+
+    /**
+     * 根据价格处理分页
+     * @param pageNo
+     * @param pageSize
+     * @param min
+     * @param max
+     * @return
+     */
+    Page<Book> pageByPrice(int pageNo, int pageSize, int min, int max);
 }

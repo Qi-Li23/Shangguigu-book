@@ -1,6 +1,7 @@
 package com.lq.test;
 
 import com.lq.pojo.Book;
+import com.lq.pojo.Page;
 import com.lq.service.BookService;
 import com.lq.service.impl.BookServiceImpl;
 import org.junit.Test;
@@ -43,5 +44,17 @@ public class BookServiceTest {
     public void queryBooks() {
         List<Book> books = bookService.queryBooks();
         books.forEach(System.out::println);
+    }
+
+    @Test
+    public void testPage() {
+        Page<Book> page = bookService.page(1, 4);
+        System.out.println(page);
+    }
+
+    @Test
+    public void testPageByPrice() {
+        Page<Book> page = bookService.pageByPrice(0, 4, 10, 50);
+        System.out.println(page);
     }
 }

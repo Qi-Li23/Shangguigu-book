@@ -86,13 +86,12 @@ public abstract class BaseDAO<T> {
      * @param conn 数据库连接
      * @param sql 执行的sql语句
      * @param args sql语句对应的参数
-     * @param <E> 返回值的数据类型
      * @return
      */
-    public <E> E queryForSingleValue(Connection conn, String sql, Object ... args) {
+    public Object queryForSingleValue(Connection conn, String sql, Object ... args) {
         ScalarHandler scalarHandler = new ScalarHandler();
         try {
-            E query = (E)runner.query(conn, sql, scalarHandler, args);
+            Object query = runner.query(conn, sql, scalarHandler, args);
             return query;
         } catch (SQLException e) {
             e.printStackTrace();

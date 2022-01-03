@@ -8,7 +8,10 @@ import com.lq.utils.WebUtils;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
+
+import static com.google.code.kaptcha.Constants.KAPTCHA_SESSION_KEY;
 
 /**
  * @author qili
@@ -43,6 +46,8 @@ public class UserServlet extends BaseServlet {
             //登录成功
             //请求转发到login_success.html
             //System.out.println("登录成功！");
+            HttpSession session = req.getSession();
+            session.setAttribute("user", user);
             req.getRequestDispatcher("/pages/user/login_success.jsp").forward(req, resp);
         }
     }
@@ -55,6 +60,11 @@ public class UserServlet extends BaseServlet {
      * @throws IOException
      */
     protected void regist(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        //获取session中保存的验证码
+        String token = (String) req.getSession().getAttribute(KAPTCHA_SESSION_KEY);
+        //删除session中保存的验证码
+        req.getSession().removeAttribute(KAPTCHA_SESSION_KEY);
+
         //1.获取请求参数
         String username = req.getParameter("username");
         String password = req.getParameter("password");
@@ -66,7 +76,7 @@ public class UserServlet extends BaseServlet {
         req.setAttribute("username", username);
         req.setAttribute("email", email);
         //2.检查验证码是否正确
-        if("abcde".equalsIgnoreCase(code)) {
+        if(token != null && token.equalsIgnoreCase(code)) {
             //正确
             //3.检查用户名是否可用
             boolean existsUsername = userService.existsUsername(username);
@@ -91,5 +101,20 @@ public class UserServlet extends BaseServlet {
             req.getRequestDispatcher("/pages/user/regist.jsp").forward(req, resp);
         }
     }
+
+    /**
+     * 注销
+     * @param req
+     * @param resp
+     * @throws ServletException
+     * @throws IOException
+     */
+    protected void logout(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        //1.销毁session
+        req.getSession().invalidate();
+        //2.重定向到首页
+        resp.sendRedirect(req.getContextPath());
+    }
+
 
 }
