@@ -1,5 +1,6 @@
 package com.lq.dao;
 
+import com.lq.utils.JdbcUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
@@ -30,73 +31,73 @@ public abstract class BaseDAO<T> {
 
     /**
      * 通用的增删改操作
-     * @param conn 数据库连接
      * @param sql 执行的sql语句
      * @param args sql语句对应的参数
      * @return 如果返回-1表示执行失败，否则返回数据库表中受影响的行数
      */
-    public int update(Connection conn, String sql, Object ... args) {
+    public int update(String sql, Object ... args) {
+        Connection conn = JdbcUtils.getConnection();
         try {
             int updateCount = runner.update(conn, sql, args);
             return updateCount;
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return -1;
     }
 
     /**
      * 通用的查询操作，返回数据表中的一条记录
-     * @param conn 数据库连接
      * @param sql 执行的sql语句
      * @param args sql语句对应的参数
      * @return 返回该条记录对应的bean对象
      */
-    public T queryForOne(Connection conn, String sql, Object ... args) {
+    public T queryForOne(String sql, Object ... args) {
+        Connection conn = JdbcUtils.getConnection();
         BeanHandler<T> beanHandler = new BeanHandler<T>(clazz);
         try {
             T t = runner.query(conn, sql, beanHandler, args);
             return t;
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
     /**
      * 通用的查询操作，返回数据表中的多条记录
-     * @param conn 数据库连接
      * @param sql 执行的sql语句
      * @param args sql语句对应的参数
      * @return 返回多条记录对应的bean组成的list
      */
-    public List<T> queryForList(Connection conn, String sql, Object ... args) {
+    public List<T> queryForList(String sql, Object ... args) {
+        Connection conn = JdbcUtils.getConnection();
         BeanListHandler<T> beanListHandler = new BeanListHandler<>(clazz);
         try {
             List<T> list = runner.query(conn, sql, beanListHandler, args);
             return list;
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
     /**
      * 通用的查询特殊值操作
-     * @param conn 数据库连接
      * @param sql 执行的sql语句
      * @param args sql语句对应的参数
      * @return
      */
-    public Object queryForSingleValue(Connection conn, String sql, Object ... args) {
+    public Object queryForSingleValue(String sql, Object ... args) {
+        Connection conn = JdbcUtils.getConnection();
         ScalarHandler scalarHandler = new ScalarHandler();
         try {
             Object query = runner.query(conn, sql, scalarHandler, args);
             return query;
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
 }

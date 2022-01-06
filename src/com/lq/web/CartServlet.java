@@ -1,5 +1,6 @@
 package com.lq.web;
 
+import com.google.gson.Gson;
 import com.lq.pojo.Book;
 import com.lq.pojo.Cart;
 import com.lq.pojo.CartItem;
@@ -11,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
 
 /**
  * @author qili
@@ -46,6 +48,38 @@ public class CartServlet extends BaseServlet {
         System.out.println(cart);
         //5.重定向到首页
         resp.sendRedirect(req.getHeader("Referer"));
+    }
+
+    /**
+     * ajax添加商品到购物车
+    * @param req
+     * @param resp
+     * @throws ServletException
+     * @throws IOException
+     */
+    protected void ajaxAddItem(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        //1.获取要添加到购物车的图书id
+        Integer id = WebUtils.parseInt(req.getParameter("id"), 0);
+        //2.根据id得到图书book对象
+        Book book = bookService.queryBookById(id);
+        //3.根据book对象创建CartItem对象
+        CartItem cartItem = new CartItem(book.getId(), book.getName(), 1, book.getPrice(), book.getPrice());
+        //4.将cartItem对象添加到购物车中
+        //得到购物车
+        Cart cart = (Cart) req.getSession().getAttribute("cart");
+        if(cart == null) {
+            //创建购物车
+            cart = new Cart();
+            req.getSession().setAttribute("cart", cart);
+        }
+        cart.addItem(cartItem);
+        req.getSession().setAttribute("lastName", cartItem.getName());
+        Gson gson = new Gson();
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("totalCount", cart.getTotalCount());
+        map.put("lastName", book.getName());
+        String mapJsonString = gson.toJson(map);
+        resp.getWriter().write(mapJsonString);
     }
 
     /**

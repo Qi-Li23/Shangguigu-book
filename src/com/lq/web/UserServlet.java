@@ -1,5 +1,6 @@
 package com.lq.web;
 
+import com.google.gson.Gson;
 import com.lq.pojo.User;
 import com.lq.service.UserService;
 import com.lq.service.impl.UserServiceImpl;
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.HashMap;
 
 import static com.google.code.kaptcha.Constants.KAPTCHA_SESSION_KEY;
 
@@ -114,6 +116,23 @@ public class UserServlet extends BaseServlet {
         req.getSession().invalidate();
         //2.重定向到首页
         resp.sendRedirect(req.getContextPath());
+    }
+
+    /**
+     *
+     * @param req
+     * @param resp
+     * @throws ServletException
+     * @throws IOException
+     */
+    protected void existsUsername(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String username = req.getParameter("username");
+        boolean existsUsername = userService.existsUsername(username);
+        Gson gson = new Gson();
+        HashMap<String, Boolean> map = new HashMap<>();
+        map.put("existsUsername", existsUsername);
+        String json = gson.toJson(map);
+        resp.getWriter().write(json);
     }
 
 

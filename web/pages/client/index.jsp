@@ -13,7 +13,12 @@
             //给“加入购物车”按钮绑定单击事件
             $("button.btn_addToCart").click(function () {
                 var id = $(this).attr("book_id");
-                location.href= "<%=basePath%>cartServlet?action=addItem&id=" + id;
+                <%--location.href= "<%=basePath%>cartServlet?action=addItem&id=" + id;--%>
+				$.getJSON("cartServlet?action=ajaxAddItem&id=" + id, function (data) {
+                    $("#cartTotalCount").text("您的购物车中有"+ data.totalCount +"件商品");
+                    $("#cartLastName").text("您刚刚将【" + data.lastName + "】加入到了购物车中");
+
+                })
             })
         })
     </script>
@@ -52,21 +57,22 @@
 				</form>
 			</div>
 			<div style="text-align: center">
-                <%--判断当前购物车是否为空--%>
-                <c:if test="${empty sessionScope.cart.items}">
-                    <%--空--%>
-                    <span> </span>
-                    <div>
-                        <span style="color: red">您的购物车为空</span>
-                    </div>
-                </c:if>
-                <c:if test="${not empty sessionScope.cart.items}">
-                    <%--非空--%>
-                    <span>您的购物车中有${sessionScope.cart.totalCount}件商品</span>
-                    <div>
-                        您刚刚将<span style="color: red">${sessionScope.lastName}</span>加入到了购物车中
-                    </div>
-                </c:if>
+                <c:choose>
+                    <%--判断当前购物车是否为空--%>
+                    <c:when test="${empty sessionScope.cart.items}">
+                        <span id="cartTotalCount">&nbsp;</span>
+                        <div>
+                            <span style="color: red" id="cartLastName">您的购物车为空</span>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <%--非空--%>
+                        <span id="cartTotalCount">您的购物车中有${sessionScope.cart.totalCount}件商品</span>
+                        <div>
+                            <span style="color: red" id="cartLastName">您刚刚将【${sessionScope.lastName}】加入到了购物车中</span>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
 			</div>
 			<%--遍历输出分页中的书籍信息--%>
 			<c:forEach items="${requestScope.page.items}" var="book">
