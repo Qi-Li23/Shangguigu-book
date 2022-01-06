@@ -4,7 +4,6 @@ import com.lq.dao.BaseDAO;
 import com.lq.dao.BookDAO;
 import com.lq.pojo.Book;
 
-import java.sql.Connection;
 import java.util.List;
 
 /**
@@ -13,71 +12,71 @@ import java.util.List;
  */
 public class BookDAOImpl extends BaseDAO<Book> implements BookDAO {
     @Override
-    public int addBook(Connection conn, Book book) {
+    public int addBook(Book book) {
         String sql = "insert into t_book(`name`, `author`, `price`, `sales`, `stock`, `img_path`) " +
                 "values(?, ?, ?, ?, ?, ?)";
-        int update = update(conn, sql, book.getName(), book.getAuthor(), book.getPrice(), book.getSales(),
+        int update = update(sql, book.getName(), book.getAuthor(), book.getPrice(), book.getSales(),
                 book.getStock(), book.getImgPath());
         return update;
     }
 
     @Override
-    public int deleteBookById(Connection conn, Integer id) {
+    public int deleteBookById(Integer id) {
         String sql = "delete from t_book where id = ?";
-        int update = update(conn, sql, id);
+        int update = update(sql, id);
         return update;
     }
 
     @Override
-    public int updateBook(Connection conn, Book book) {
+    public int updateBook(Book book) {
         String sql = "update t_book set name = ?, author = ?, price = ?, sales = ?, stock = ?, img_path = ? " +
                 "where id = ?";
-        int update = update(conn, sql, book.getName(), book.getAuthor(), book.getPrice(), book.getSales(),
+        int update = update(sql, book.getName(), book.getAuthor(), book.getPrice(), book.getSales(),
                 book.getStock(), book.getImgPath(), book.getId());
         return update;
     }
 
     @Override
-    public Book queryBookById(Connection conn, Integer id) {
+    public Book queryBookById(Integer id) {
         String sql = "select `id`, `name`, `author`, `price`, `sales`, `stock`, `img_path` imgPath from t_book where id = ?";
-        Book book = queryForOne(conn, sql, id);
+        Book book = queryForOne(sql, id);
         return book;
     }
 
     @Override
-    public List<Book> queryBooks(Connection conn) {
+    public List<Book> queryBooks() {
         String sql = "select `id`, `name`, `author`, `price`, `sales`, `stock`, `img_path` imgPath from t_book";
-        List<Book> books = queryForList(conn, sql);
+        List<Book> books = queryForList(sql);
         return books;
     }
 
     @Override
-    public int queryForPageTotalCount(Connection conn) {
+    public int queryForPageTotalCount() {
         String sql = "select count(*) from t_book";
-        Number value = (Number) queryForSingleValue(conn, sql);
+        Number value = (Number) queryForSingleValue(sql);
         return value.intValue();
     }
 
     @Override
-    public List<Book> queryForItems(Connection conn, int begin, int pageSize) {
+    public List<Book> queryForItems(int begin, int pageSize) {
         String sql = "select `id`, `name`, `author`, `price`, `sales`, `stock`, " +
                  "`img_path` imgPath from t_book limit ?, ?";
-        List<Book> list = queryForList(conn, sql, begin, pageSize);
+        List<Book> list = queryForList(sql, begin, pageSize);
         return list;
     }
 
     @Override
-    public int queryForPageTotalCountByPrice(Connection conn, int min, int max) {
+    public int queryForPageTotalCountByPrice(int min, int max) {
         String sql = "select count(*) from t_book where price between ? and ?";
-        Number value = (Number) queryForSingleValue(conn, sql, min, max);
+        Number value = (Number) queryForSingleValue(sql, min, max);
         return value.intValue();
     }
 
     @Override
-    public List<Book> queryForItemsByPrice(Connection conn, int begin, int pageSize, int min, int max) {
+    public List<Book> queryForItemsByPrice(int begin, int pageSize, int min, int max) {
         String sql = "select `id`, `name`, `author`, `price`, `sales`, `stock`, " +
                 "`img_path` imgPath from t_book where price between ? and ? order by price limit ?, ?";
-        List<Book> list = queryForList(conn, sql, min, max, begin, pageSize);
+        List<Book> list = queryForList(sql, min, max, begin, pageSize);
         return list;
     }
 }

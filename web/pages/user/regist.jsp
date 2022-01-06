@@ -10,6 +10,19 @@
 
     <script type="text/javascript">
         $(function() {
+            //给用户名绑定失去焦点事件
+			$("#username").blur(function () {
+                var username = $("#username").val();
+                $.getJSON("userServlet?action=existsUsername&username=" + username, function (data) {
+                    if(data.existsUsername) {
+                        $("span.errorMsg").text("用户名已存在！");
+                    } else {
+                        $("span.errorMsg").text("用户名可用！");
+                    }
+                })
+            })
+
+
             //给验证码图片绑定单击事件
             $("#code_jpg").click(function () {
                 // 在事件响应的function 函数中有一个this 对象。这个this 对象，是当前正在响应事件的dom 对象

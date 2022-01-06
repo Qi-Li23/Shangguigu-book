@@ -14,6 +14,7 @@ import java.util.Properties;
  */
 public class JdbcUtils {
     private static DruidDataSource dataSource;
+    private static ThreadLocal<Connection> conns = new ThreadLocal<>();
 
     static {
         try {
@@ -33,28 +34,75 @@ public class JdbcUtils {
      * @return
      */
     public static Connection getConnection() {
-        Connection conn = null;
-        try {
-            conn = dataSource.getConnection();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        Connection conn = conns.get();
+        if(conn == null) {
+            try {
+                conn = dataSource.getConnection();
+                conns.set(conn);
+                conn.setAutoCommit(false);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return conn;
     }
 
     /**
-     * 关闭数据库连接
-     * @param conn
+     * 提交事务并关闭连接
      */
-    public static void close(Connection conn) {
+    public static void commitAndClose() {
+        Connection conn = conns.get();
         if(conn != null) {
             try {
-                conn.close();
+                conn.commit();
             } catch (SQLException e) {
                 e.printStackTrace();
+            } finally {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
         }
+        conns.remove();
     }
+
+    /**
+     * 回滚事务并关闭连接
+     */
+    public static void rollbackAndClose() {
+        Connection conn = conns.get();
+        if(conn != null) {
+            try {
+                conn.rollback();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        conns.remove();
+    }
+
+
+//    /**
+//     * 关闭数据库连接
+//     * @param conn
+//     */
+//    public static void close(Connection conn) {
+//        if(conn != null) {
+//            try {
+//                conn.close();
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
 
 }
