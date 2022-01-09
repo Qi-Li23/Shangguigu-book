@@ -18,7 +18,7 @@ Modified the page index.jsp to accomplish ajax by using jQuery. <br/>
 
 ## Summary
 ### 1. Structure
-
+https://github.com/Qi-Li23/Shangguigu-book/blob/5d0333cfa19698efa62d086368ea62064a23fe76/sum-imgs/structure.png
 
 ### 2. Technology
 IDE：IntelliJ IDEA2018.1.8<br/>
@@ -31,7 +31,7 @@ verification：Google mykaptcha2.3.2<br/>
 junit：junit4<br/>
 JSP, Servlet<br/>
 ### 3. flow
-
+https://github.com/Qi-Li23/Shangguigu-book/blob/5d0333cfa19698efa62d086368ea62064a23fe76/sum-imgs/flow.png
 
 
  
